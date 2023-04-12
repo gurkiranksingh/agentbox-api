@@ -1,6 +1,7 @@
 const express = require("express");
+const fetch = require("node-fetch");
 const app = express();
-const port = 3000;
+const port = 8080;
 
 app.listen(port, () => {
   console.log(
@@ -9,13 +10,11 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-  console.log("Welcome to server");
+  res.json("Welcome to the Agentbox API");
 });
 
-app.get("/agentbox/:type", (req, res) => {
+app.get("/agentbox/:type", async (req, res) => {
   console.log("Received agentbox request", req.query);
-  res.setHeader("X-Client-ID", req.header("X-Client-ID"));
-  res.setHeader("X-API-Key", req.header("X-API-Key"));
 
   const url =
     `https://api.agentboxcrm.com.au/${req.params.type}?` +
@@ -25,5 +24,14 @@ app.get("/agentbox/:type", (req, res) => {
       "filter[hiddenListing]": false,
       page: req.query.page,
     });
-  res.redirect(302, url);
+
+  const agentboxResults = await fetch(url, {
+    method: "GET",
+    headers: {
+      "X-Client-ID": req.header("X-Client-ID"),
+      "X-API-Key": req.header("X-API-Key"),
+    },
+  }).then((res) => res.json());
+  console.log(agentboxResults)
+  res.json(agentboxResults);
 });
