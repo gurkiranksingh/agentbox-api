@@ -8,6 +8,10 @@ app.listen(port, () => {
   );
 });
 
+app.get("/", (req, res) => {
+  console.log("Welcome to server");
+});
+
 app.get("/agentbox/:type", (req, res) => {
   console.log("Received agentbox request", req.query);
   res.setHeader("X-Client-ID", req.header("X-Client-ID"));
