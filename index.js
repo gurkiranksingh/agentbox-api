@@ -30,6 +30,7 @@ app.get("/agentbox/:type", async (req, res) => {
     headers: {
       "X-Client-ID": req.header("X-Client-ID"),
       "X-API-Key": req.header("X-API-Key"),
+      "X-Robots-Tag": 'none'
     },
   }).then((res) => res.json());
   console.log(agentboxResults)
